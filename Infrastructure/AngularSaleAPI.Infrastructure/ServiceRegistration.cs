@@ -1,0 +1,54 @@
+﻿
+using AngularSaleAPI.Application.Abstractions.Services.Configurations;
+using AngularSaleAPI.Application.Abstractions.Services.ProductServices;
+using AngularSaleAPI.Application.Abstractions.Services.UserServices;
+using AngularSaleAPI.Application.Abstractions.Storage;
+using AngularSaleAPI.Application.Abstractions.Token;
+using AngularSaleAPI.Infrastructure.Enums;
+using AngularSaleAPI.Infrastructure.Services.Configurations;
+using AngularSaleAPI.Infrastructure.Services.Mail;
+using AngularSaleAPI.Infrastructure.Services.ProductServices;
+using AngularSaleAPI.Infrastructure.Services.Storage;
+using AngularSaleAPI.Infrastructure.Services.Storage.Azure;
+using AngularSaleAPI.Infrastructure.Services.Storage.Local;
+using AngularSaleAPI.Infrastructure.Services.Token;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AngularSaleAPI.Infrastructure
+{
+    public static class ServiceRegistration
+    {
+        public static void AddInfrastructureServices(this IServiceCollection services)
+        {
+            services.AddScoped<IStorageService, StorageService>();
+            services.AddScoped<ITokenHandler, TokenHandler>();
+            services.AddScoped<IMailService, MailService>();
+            services.AddScoped<IApplicationService, ApplicationService>();
+            services.AddScoped<IQRCodeService, QRCodeService>();
+        }
+        
+        public static void AddStorage<T>(this IServiceCollection services) where T : Storage, IStorage
+        {
+            services.AddScoped<IStorage,T>();
+        }
+        public static void AddStorage(this IServiceCollection services, StorageType storageType)
+        {
+            switch (storageType) {
+                case StorageType.Local:
+                    services.AddScoped<IStorage, LocalStorage>();
+                    break;
+                case StorageType.Azure:
+                    services.AddScoped<IStorage, AzureStorage>();
+                    break;
+                default:
+                    services.AddScoped<IStorage, LocalStorage>();
+                    break;
+            }
+        }
+    }
+}
