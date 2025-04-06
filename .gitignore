@@ -38,6 +38,7 @@ msbuild.wrn
 *.sln.docstates
 
 # Sensitive configuration files
+appsettings.json
 appsettings.Development.json
 appsettings.Production.json
 *.Development.json
