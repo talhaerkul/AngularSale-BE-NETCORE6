@@ -23,7 +23,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 //
-builder.Services.AddHttpContextAccessor();//clienttan gelen request sonucu oluþan HttpContext nesnesine katmanlardaki classlardan eriþebilmemizi saðlar
+builder.Services.AddHttpContextAccessor();//clienttan gelen request sonucu oluï¿½an HttpContext nesnesine katmanlardaki classlardan eriï¿½ebilmemizi saï¿½lar
 builder.Services.AddPersistenceServices();
 builder.Services.AddInfrastructureServices();
 builder.Services.AddApplicationServices();
@@ -40,10 +40,10 @@ Logger log = new LoggerConfiguration()
     .WriteTo.File("logs/log.txt")
     .WriteTo.MySQL(builder.Configuration.GetConnectionString("MySql"), "logs")
     //.WriteTo.Seq(builder.Configuration["Seq:ServerURL"])
-    //todo docker kurulumu yapýlacak
+    //todo docker kurulumu yapï¿½lacak
     .Enrich.FromLogContext()
     .Enrich.With<UsernameColumnWriter>()
-    //todo username kolonuna loglanmýyor
+    //todo username kolonuna loglanmï¿½yor
     .MinimumLevel.Information()
     .CreateLogger(); 
 builder.Host.UseSerilog(log);
@@ -63,7 +63,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters = new()
         {
             ValidateAudience = true, // kullanacak site/client/api
-            ValidateIssuer = true, // oluþturan site/api
+            ValidateIssuer = true, // oluï¿½turan site/api
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true, // uygulamaya ait security key
 
@@ -76,18 +76,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 //
-// parantez içi manuel kontrol entegresi için
+// parantez iï¿½i manuel kontrol entegresi iï¿½in
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ValidationFilter>();
     options.Filters.Add<RolePermissionFilter>();
 
 })
-    // validation kontrolü yaptýk
+    // validation kontrolï¿½ yaptï¿½k
     .AddFluentValidation(configuration => configuration.RegisterValidatorsFromAssemblyContaining<CreateProductValidator>())
     
-    //otomatik olan validasyon iþlemini manuel yapmaný saðlýyor
-    //alttaki kod olmadýðý zaman kendisi validasyon yapýyor, controllerda if(ModelState.isValid) kodunu kullandýðýnda
+    //otomatik olan validasyon iï¿½lemini manuel yapmanï¿½ saï¿½lï¿½yor
+    //alttaki kod olmadï¿½ï¿½ï¿½ zaman kendisi validasyon yapï¿½yor, controllerda if(ModelState.isValid) kodunu kullandï¿½ï¿½ï¿½nda
     .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);
     //
 //
